@@ -10,12 +10,18 @@ app.use(express.json());
 // Static directory to be served
 app.use(express.static("app/public"));
 
-// Routes
-// =============================================================
-require("./app/routes/api-routes.js")(app);
+var exphbs = require("express-handlebars");
 
-// Starts the server to begin listening
-// =============================================================
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
+// Import routes and give the server access to them.
+var routes = require("./controllers/burgers_controller");
+
+app.use(routes);
+
+// Start our server so that it can begin listening to client requests.
 app.listen(PORT, function() {
-  console.log("App listening on PORT " + PORT);
+  // Log (server-side) when our server has started
+  console.log("Server listening on: http://localhost:" + PORT);
 });
